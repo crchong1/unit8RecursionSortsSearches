@@ -7,7 +7,7 @@
 import java.awt.*;
 import javax.swing.JPanel;
 
-public class KochPanel extends JPanel
+public class FractalTreePanel extends JPanel
 {
    private final int PANEL_WIDTH = 600;
    private final int PANEL_HEIGHT = 600;
@@ -18,12 +18,16 @@ public class KochPanel extends JPanel
    private final int LEFTX = 60, LEFTY = 300;
    private final int RIGHTX = 340, RIGHTY = 300;
 
+   private double thetaLeft = 30;
+   private double thetaRight = 30;
+   private double ratio = .8;
+   
    private int current; //current order
 
    //-----------------------------------------------------------------
    //  Sets the initial fractal order to the value specified.
    //-----------------------------------------------------------------
-   public KochPanel (int currentOrder)
+   public FractalTreePanel (int currentOrder)
    {
       current = currentOrder;
       setBackground (Color.black);
@@ -36,34 +40,30 @@ public class KochPanel extends JPanel
    //  intermediate points are computed, and each line segment is
    //  drawn as a fractal.
    //-----------------------------------------------------------------
-   public void drawFractal (int order, int x1, int y1, int x5, int y5,
-                            Graphics page)
+  
+
+   public void drawFractal (int order, int startX1, int startY1, double length, double theta, double theta2, Graphics page)
    {
-      int deltaX, deltaY, x2, y2, x3, y3, x4, y4;
-
-      if (order == 1)
-         page.drawLine (x1, y1, x5, y5);
-      else
-      {
-         deltaX = x5 - x1;  // distance between end points
-         deltaY = y5 - y1;
-
-         x2 = x1 + deltaX / 3;  // one third
-         y2 = y1 + deltaY / 3;
-
-         x3 = (int) ((x1+x5)/2 + SQ * (y1-y5));  // tip of projection
-         y3 = (int) ((y1+y5)/2 + SQ * (x5-x1));
-
-         x4 = x1 + deltaX * 2/3;  // two thirds
-         y4 = y1 + deltaY * 2/3;
-
-         drawFractal (order-1, x1, y1, x2, y2, page);
-         drawFractal (order-1, x2, y2, x3, y3, page);
-         drawFractal (order-1, x3, y3, x4, y4, page);
-         drawFractal (order-1, x4, y4, x5, y5, page);
-      }
+       length = length*ratio;
+       
+       //left branches
+       page.drawLine((int)(startX1 - length*Math.sin(theta + order*thetaLeft)), (int)(startY1 + length*Math.cos(theta + order*thetaLeft)));
+       
+       //right branches
+       page.drawLine((int)(startX1 + length*Math.sin(theta + order*thetaLeft)), (int)(startY1 + length*Math.cos(theta + order*thetaLeft)));
+       order++;
+       double theta1 = theta + thetaLeft;
+       double theta2 = theta - thetaLeft; 
+       
+       int x2 = (int) startX1 - length*Math.sin(theta + order*thetaLeft);
+       int y2 = (int) startY1 + length*Math.cos(theta - order*thetaLeft);
+       drawFractal(order, x2, y2, length, theta1, page);
+       
+       int x3 = (int) startX1 + length*Math.sin(theta + order*thetaLeft);
+       int y3 = (int) startY1 + length*Math.cos(theta - order*thetaLeft);
+       drawFractal(order, x3, y3, length, theta2, page);
+       
    }
-
    //-----------------------------------------------------------------
    //  Performs the initial calls to the drawFractal method.
    //-----------------------------------------------------------------

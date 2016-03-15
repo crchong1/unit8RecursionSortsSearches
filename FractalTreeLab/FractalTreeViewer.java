@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class KochSnowflakeViewer implements ActionListener
+public class FractalTreeViewer implements ActionListener
 {
     private final int WIDTH = 800;
     private final int HEIGHT = 1000;
@@ -18,7 +18,7 @@ public class KochSnowflakeViewer implements ActionListener
 
     private JButton increase, decrease;
     private JLabel titleLabel, orderLabel;
-    private KochPanel drawing;
+    private FractalTreePanel drawing;
     private JPanel panel, tools;
     private JFrame frame;
 
@@ -27,10 +27,10 @@ public class KochSnowflakeViewer implements ActionListener
     //-----------------------------------------------------------------
     public static void main(String[] args)
     {
-        KochSnowflakeViewer viewer = new KochSnowflakeViewer();
+        FractalTreeViewer viewer = new FractalTreeViewer();
     }
 
-    public KochSnowflakeViewer()
+    public FractalTreeViewer()
     {
         tools = new JPanel ();
         tools.setLayout (new BoxLayout(tools, BoxLayout.X_AXIS));
@@ -59,14 +59,14 @@ public class KochSnowflakeViewer implements ActionListener
         tools.add (Box.createHorizontalStrut (20));
         tools.add (orderLabel);
 
-        drawing = new KochPanel (1);
+        drawing = new FractalTreePanel (1);
 
         panel = new JPanel();
         panel.add (tools);
         panel.add (drawing);
 
         frame = new JFrame();
-        frame.setTitle("Knoch Snowflake");
+        frame.setTitle("Fractal Tree");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(WIDTH, HEIGHT);
         frame.add(panel);
