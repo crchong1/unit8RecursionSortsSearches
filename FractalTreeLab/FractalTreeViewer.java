@@ -4,7 +4,8 @@
 //  Demonstrates the use of recursion.
 //  @gcschmit (19 July 2014): converted from an applet to an application
 //********************************************************************
-
+import java.awt.Graphics;
+import java.awt.geom.Line2D;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -37,7 +38,7 @@ public class FractalTreeViewer implements ActionListener
         tools.setBackground (Color.yellow);
         tools.setOpaque (true);
 
-        titleLabel = new JLabel ("The Koch Snowflake");
+        titleLabel = new JLabel ("The Fractal Tree");
         titleLabel.setForeground (Color.black);
 
         increase = new JButton (new ImageIcon ("increase.gif"));

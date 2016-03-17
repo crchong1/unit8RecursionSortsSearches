@@ -3,32 +3,31 @@
 //
 //  Represents a drawing surface on which to paint a Koch Snowflake.
 //********************************************************************
-
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.Line2D;
 import java.awt.*;
 import javax.swing.JPanel;
 
 public class FractalTreePanel extends JPanel
 {
-   private final int PANEL_WIDTH = 600;
-   private final int PANEL_HEIGHT = 600;
+   private final int PANEL_WIDTH = 1800;
+   private final int PANEL_HEIGHT = 1500;
+   private Graphics2D page; 
 
-   private final double SQ = Math.sqrt(253.0) / 6;
-
-   private final int TOPX = 200, TOPY = 20;
-   private final int LEFTX = 60, LEFTY = 300;
-   private final int RIGHTX = 340, RIGHTY = 300;
-
-   private double thetaLeft = 30;
-   private double thetaRight = 30;
+   private final int startX = 650, startY = 180;
+   private final double startLength = 200;
+   private double thetaLeft = 30.0;
+   private double thetaRight = 40.0;
    private double ratio = .8;
-   
-   private int current; //current order
-
+   private int current;
+   private int counter=0;
    //-----------------------------------------------------------------
    //  Sets the initial fractal order to the value specified.
    //-----------------------------------------------------------------
    public FractalTreePanel (int currentOrder)
-   {
+   { 
+      
       current = currentOrder;
       setBackground (Color.black);
       setPreferredSize (new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
@@ -42,40 +41,101 @@ public class FractalTreePanel extends JPanel
    //-----------------------------------------------------------------
   
 
-   public void drawFractal (int order, int startX1, int startY1, double length, double theta, double theta2, Graphics page)
+   public void drawFractal (double startX1, double startY1, double length, double theta, Graphics2D page)
    {
        length = length*ratio;
+       if (length < 3)
+       {
+           return;
+       }
+       //left angle
+       double theta2 = theta - thetaLeft;
+       
+       //right angle
+       double theta3 = theta + thetaRight; 
+       
+       double x2 = startX1 + length*Math.sin(Math.toRadians(theta2));
+       double y2 = startY1 + length*Math.cos(Math.toRadians(theta2));
+       
+       double x3 = startX1 + length*Math.sin(Math.toRadians(theta3));
+       double y3 = startY1 + length*Math.cos(Math.toRadians(theta3));
        
        //left branches
-       page.drawLine((int)(startX1 - length*Math.sin(theta + order*thetaLeft)), (int)(startY1 + length*Math.cos(theta + order*thetaLeft)));
+       page.draw(new Line2D.Double(startX1, startY1, x2, y2));
        
        //right branches
-       page.drawLine((int)(startX1 + length*Math.sin(theta + order*thetaLeft)), (int)(startY1 + length*Math.cos(theta + order*thetaLeft)));
-       order++;
-       double theta1 = theta + thetaLeft;
-       double theta2 = theta - thetaLeft; 
+       page.draw(new Line2D.Double(startX1, startY1, x3, y3));
        
-       int x2 = (int) startX1 - length*Math.sin(theta + order*thetaLeft);
-       int y2 = (int) startY1 + length*Math.cos(theta - order*thetaLeft);
-       drawFractal(order, x2, y2, length, theta1, page);
-       
-       int x3 = (int) startX1 + length*Math.sin(theta + order*thetaLeft);
-       int y3 = (int) startY1 + length*Math.cos(theta - order*thetaLeft);
-       drawFractal(order, x3, y3, length, theta2, page);
-       
+       counter++;
+       if(counter%13 == 0)
+       {
+           page.setColor (Color.blue);
+       }
+       else if (counter%13 == 1)
+       {
+           page.setColor (Color.cyan);
+       }
+       else if (counter%13 == 2)
+       {
+           page.setColor (Color.gray);
+       }
+       else if(counter%13 == 3)
+       {
+           page.setColor (Color.green);
+       }
+       else if(counter%13 == 4)
+       {
+           page.setColor (Color.magenta);
+       }
+       else if (counter%13 == 5)
+       {
+           page.setColor (Color.pink);
+       }
+       else if(counter%13 == 6)
+       {
+           page.setColor (Color.white);
+       }
+       else if(counter%13 == 7)
+       {
+           page.setColor (Color.orange);
+       }
+       else if (counter%13 == 8)
+       {
+           page.setColor (Color.yellow);
+       }
+       else if(counter%13 == 9)
+       {
+           page.setColor (Color.lightGray);
+       }
+       else if(counter%13 == 10)
+       {
+           page.setColor (Color.darkGray);
+       }
+       else if (counter%13 == 11)
+       {
+           page.setColor (Color.black);
+       }
+       else if(counter%13 == 12)
+       {
+           page.setColor (Color.red);
+       }
+      
+       drawFractal(x2, y2, length, theta2, page);
+       drawFractal(x3, y3, length, theta3, page);
    }
    //-----------------------------------------------------------------
    //  Performs the initial calls to the drawFractal method.
    //-----------------------------------------------------------------
-   public void paintComponent (Graphics page)
+   public void paintComponent (Graphics graphics)
    {
-      super.paintComponent (page);
+      Graphics2D page = (Graphics2D) graphics;
+      super.paintComponent(page);
 
-      page.setColor (Color.green);
+      page.setColor (Color.red);
 
-      drawFractal (current, TOPX, TOPY, LEFTX, LEFTY, page);
-      drawFractal (current, LEFTX, LEFTY, RIGHTX, RIGHTY, page);
-      drawFractal (current, RIGHTX, RIGHTY, TOPX, TOPY, page);
+      page.draw(new Line2D.Double(startX, startY, startX, startY + startLength));
+      drawFractal(startX, startY + startLength, startLength, 0, page);
+      
    }
 
    //-----------------------------------------------------------------
